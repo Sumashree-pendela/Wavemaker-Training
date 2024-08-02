@@ -1,0 +1,25 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #e0e0e0; 
+    background-color: #f2f2f2;
+    padding: 8px;
+    margin: 3px;
+}
+th,td {
+text-align: center;
+border: 1px solid #e0e0e0; 
+background-color: #f2f2f2;
+padding: 8px;
+margin: 3px;
+
+}
+h2 {
+text-align: center;
+}
+.tdbg {
+background-color: white;
+}
+.tdbold {
+    font-weight: bold;
+}
