@@ -1,0 +1,23 @@
+.container {
+    border:2px solid black;
+    padding-left: 10px;
+    width: 500px;
+}
+
+span {
+    text-decoration: underline;
+}
+
+.container-3 {
+    border: 1px solid black;
+    padding-left: 65px;
+}
+
+.display {
+    width: 83%;
+    border-bottom: 1px solid rgb(126, 117, 117);
+}
+
+.container.firstContainer {
+    width: 500px;
+}
