@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container btn-secondary firstContainer p-3">
+        <div class="calculator p-2">
+            <div class="container-2">
+                <div class="row mb-2 heading">
+                    <h6>Calculator</h6>
+                </div>
+            </div>
+            <div class="container-3 bg-info">
+                <div class="row mb-3">
+                    <div class="col-md-10">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a class="nav-link text-secondary" href="#"><span>V</span>iew</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-secondary" href="#"><span>E</span>dit</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-secondary" href="#"><span>H</span>elp</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12 p-1">
+                        <div id="displayContainer">
+                            <textarea class="display text-right" id="display" readonly></textarea>
+                            <span id="cursor" class="cursor"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block "
+                            onclick="memoryOptions('mc')">MC</button>
+                    </div>
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block"
+                            onclick="memoryOptions('mr')">MR</button>
+                    </div>
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block"
+                            onclick="memoryOptions('ms')">MS</button>
+                    </div>
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block" onclick="append('m+')">M+</button>
+                    </div>
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block" onclick="append('m-')">M-</button>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block" onclick="delLeftElement()"><- </button>
+                    </div>
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block" onclick="delLeftElement()">CE</button>
+                    </div>
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block" onclick="clearDisplay()">C</button>
+                    </div>
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block"
+                            onclick="singleOperations('±')">±</button>
+                    </div>
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block"
+                            onclick="singleOperations('√')">√</button>
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block" onclick="append('7')">7</button>
+                    </div>
+                    <div class="col-2  p-1">
+                        <button type="button" class="btn btn-secondary btn-block" onclick="append('8')">8</button>
+                    </div>
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block" onclick="append('9')">9</button>
+                    </div>
+                    <div class="col-2  p-1">
+                        <button type="button" class="btn btn-secondary btn-block" onclick="append('/')">/</button>
+                    </div>
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block" onclick="append('%')">%</button>
+                    </div>
+                </div>
+
+                <div class="row mb-1">
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block block-color"
+                            onclick="append('4')">4</button>
+                    </div>
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block block-color"
+                            onclick="append('5')">5</button>
+                    </div>
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block block-color"
+                            onclick="append('6')">6</button>
+                    </div>
+                    <div class="col-2 p-1">
+                        <button type="button" class="btn btn-secondary btn-block block-color"
+                            onclick="append('*')">*</button>
+                    </div>
+                    <div class="col-2  p-1">
+                        <button type="button" class=" btn btn-secondary btn-block block-color"
+                            onclick="singleOperations('1/x')">1/x</button>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-8">
+                        <div class="row mb-1">
+                            <div class="col-md-3  mb-1 p-1"><button type="button"
+                                    class="button btn btn-secondary  btn-block" onclick="append('1')">1</button>
+                            </div>
+                            <div class="col-md-3 mb-1 p-1"><button type="button"
+                                    class="button btn btn-secondary btn-block" onclick="append('2')">2</button>
+                            </div>
+                            <div class="col-md-3 mb-1 p-1"><button type="button"
+                                    class="button btn btn-secondary btn-block" onclick="append('3')">3</button>
+                            </div>
+                            <div class="col-md-3 p-1"><button type="button" class="button btn btn-secondary  btn-block"
+                                    onclick="append('-')">-</button>
+                            </div>
+                            <div class="col-md-6 p-1"><button type="button" class="button btn btn-secondary btn-block"
+                                    onclick="append('0')">0</button>
+                            </div>
+                            <div class="col-md-3 p-1"><button type="button" class="button btn btn-secondary btn-block"
+                                    onclick="append('.')">.</button>
+                            </div>
+                            <div class="col-md-3 p-1"><button type="button" class="button btn btn-secondary btn-block"
+                                    onclick="append('+')">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-1 p-1">
+                        <button type="button" class="button btn btn-secondary btn-block h-100"
+                            onclick="cal()">=</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
