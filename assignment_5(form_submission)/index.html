@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div class="main-container">
+        <form id="accountForm">
+            <h2>Create Account</h2>
+            <div class="container">
+                <div class="nameGroup">
+                    <div class="fnameField">
+                        <label for="fname">First name *</label><br>
+                        <input type="text" id="fname" name="fname" class="inputWidth" required="true">
+                    </div>
+                    <div class="fnameField">
+                        <label for="lname">Last name *</label><br>
+                        <input type="text" id="lname" name="lname" class="inputWidth" required="true"> <br><br>
+                    </div>
+                </div>
+                <div class="columnField">
+                    <label for="email">Email*</label><br>
+                    <input type="email" id="email" name="email" class="emailWidth" required="true"><br><br>
+                </div>
+
+                <div class="columnGroup">
+                    <div class="columnField">
+                        <label for="password">Password*</label><br>
+                        <input type="password" id="password" name="password" class="inputWidth" required="true">
+                    </div>
+                    <div class="columnField">
+                        <label for="cpassword">Confirm Password *</label><br>
+                        <input type="password" id="cpassword" name="cpassword" class="inputWidth" required="true"><br><br>
+                    </div>
+                </div>
+
+                <div class="columnGroup">
+                    <div class="gender">
+                        <label for="gender"><b>Gender:</b></label><br>
+                        <div class="radio">
+                            <input type="radio" name="gender" id="male" required>Male
+                            <input type="radio" name="gender" id="female" required>Female
+                        </div>
+                    </div>
+                    <div class="hobbies">
+                        <label for="hobbies"><b>Hobbies:</b></label><br>
+                        <div class="checkboxField">
+                            <input type="checkbox" name="hobbies" id="music">Music
+                            <input type="checkbox" name="hobbies" id="sports">Sports
+                            <input type="checkbox" name="hobbies" id="travel">Travel
+                            <input type="checkbox" name="hobbies" id="movies">Movies<br><br>
+                        </div>
+                    </div>
+                </div>
+                <div class="incomeGroup">
+                    <div class="picField">
+                        <label for="sincome">Source of Income</label><br>
+                        <div>
+                            <select id="sincome" name="sincome" class="range" required="true">
+                                <option value="Employed">Employed</option>
+                                <option value="Student">Student</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="picField">
+                        <label for="income">Income</label>
+                        <div class="range">
+                            <input type="range" id="income" name="income" min="0" max="20000" value="33"
+                                class="inputWidth" required="true">
+                            <span>20K</span><br><br>
+                        </div>
+                    </div>
+                </div>
+                <div class="columnGroup">
+                    <div class="picField">
+                        <label for="file" class="picInput">Upload Profile Picture</label><br>
+                        <input type="file" id="file" name="file" class="picInput">
+                    </div>
+                    <div class="picField">
+                        <label for="age">Age</label><br>
+                        <input type="text" name="age" value="18" class="inputWidth" required="true"><br><br>
+                    </div>
+                </div>
+                <div class="columnField">
+                    <label for="bio">Bio</label><br>
+                    <textarea id="bio" name="bio" rows="7" cols="80" class="emailWidth" required="true"></textarea>
+                </div>
+                <button type="submit" id="button">Create</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

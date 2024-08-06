@@ -1,0 +1,108 @@
+label {
+    font-weight: bold;
+    color: green;
+}
+h2 {
+    text-align: center;
+}
+
+
+.nameGroup, .genderGroup, .columnGroup, .range, .incomeGroup {
+    display: flex;
+    flex-direction: row;
+}
+
+.columnField, .picInput, .radio {
+    width: 100%;
+}
+
+span {
+    color: white;
+    background-color: green;
+}
+
+#button {
+    margin-top: 8px;
+    margin-right: 29px;
+    float: right;
+    background-color: green;
+    color: white;
+    padding :3px;
+    font-size: 14px;
+}
+
+.fnameField, .lnameField, .gender, .hobbies, .picField{
+    width: 50%;
+}
+
+#income{
+    width: 83%;
+}
+
+#sincome{
+    width: 92%;
+}
+
+.inputWidth {
+    width: 90%;
+}
+
+.emailWidth {
+    width: 95%;
+}
+
+form {
+    margin: 0 auto;
+    width: 700px;
+}
+
+.main-container {
+    border : 20px solid rgb(28, 100, 112);
+    margin: 0 auto;
+    width: 700px;
+    height: 585px;
+}
+
+.container {
+    padding-left: 17px;
+}
+
+
+@media only screen and (max-width: 480px) {
+
+    .main-container {
+        height: auto;
+        border: 10px solid rgb(28, 100, 112); 
+    }
+
+    .fnameField, .gender, .hobbies, .picField {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .nameGroup, .genderGroup, .columnGroup, .incomeGroup {
+        flex-direction: column;
+    }
+
+
+    #sincome, .emailWidth, .inputWidth, #income, .columnField, .picInput, .radio{
+        width: 100%;
+    }
+
+    button {
+        position: relative;
+        right:315px;
+        top:12px;
+    }
+
+    form {
+        padding-left: 2x;
+    }
+
+    .container {
+        padding-bottom: 70px;
+        padding-right: 15px;
+    }
+
+}
+
