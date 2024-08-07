@@ -1,0 +1,126 @@
+body.light-theme {
+    background-color: #2e2d2d;
+    color: #363232;
+}
+
+body.dark-theme {
+    background-color: #252121;
+    color: #4b4a4a;
+}
+
+body.dark-theme .card {
+    background-color: #252121;
+    color: #4b4a4a;
+}
+
+#toDoContainer {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.item .content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-right: 10px;
+}
+
+.item .content .text,
+.item .content .priority {
+    margin-bottom: 5px;
+    margin-right: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex: 1 1 auto;
+}
+
+.item .content .text {
+    min-width: 200px;
+}
+
+.item .content .priority {
+    max-width: 100px;
+}
+
+.item .actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.item .actions button {
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.dialog {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgb(95, 91, 91);
+    border: 1px solid #ccc;
+    padding: 20px;
+    z-index: 1000;
+}
+
+.dialog-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.dialog-actions {
+    display: flex;
+    flex-direction: row;
+}
+
+.dialog-label {
+    font-size: 20px;
+    padding-bottom: 12px;
+    color: #ccc;
+}
+
+.dialog-content input {
+    margin-bottom: 10px;
+}
+
+@media screen and (max-width: 800px) {
+    .container {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .container {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .container {
+        width: 99%;
+        margin-top: 5em;
+    }
+}

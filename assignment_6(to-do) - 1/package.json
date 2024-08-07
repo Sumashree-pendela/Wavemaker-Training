@@ -1,0 +1,12 @@
+{
+  "name": "todo-list",
+  "version": "1.0.0",
+  "main": "script.js",
+  "scripts": {
+    "start": "http-server -c-1 -o",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
