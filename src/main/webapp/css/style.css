@@ -1,0 +1,125 @@
+.container {
+    width: 860px;
+    padding-top: 30px;
+}
+
+h1 {
+    text-align: center;
+}
+
+body.dark-mode .todo-container,
+body.dark-mode {
+    background-color: rgb(26, 22, 22);
+}
+
+.todo-container {
+background-color: #e6ffff
+}
+
+#todoSearch {
+    margin: 10px;
+}
+
+.todoInput {
+    width: 310px;
+}
+
+#todoPriority {
+    margin: 12px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+#todoSort {
+    height: 35px;
+    margin-left: 10px;
+    margin-top: 20px;
+}
+
+.todo-edit,
+.todo-del,
+.todo-date,
+.todo-time,
+.todo-subtask,.todo-completed {
+    margin-left: 13px;
+}
+
+.todo-input {
+    margin: 10px;
+}
+
+.todo-subtask {
+padding-right: 10px;
+}
+
+
+.todo {
+padding: 1px;
+    display: block;
+    border: 1px solid rgb(101, 97, 97);
+    margin-bottom: 10px;
+    margin-left: 3px;
+    margin-right: 3px;
+    background-color: #ffe6ff;
+}
+
+.todo-priority {
+    height: 30px;
+    width: 90px;
+}
+
+.dialog-content,
+.subTaskDialog {
+    z-index: 1;
+    position: fixed;
+    left: 0;
+    top: 0;
+    margin: 0 auto;
+    margin-left: 350px;
+    margin-top: 250px;
+    padding: 8px;
+    background-color: rgb(114, 118, 118);
+    display: none;
+}
+
+.dialog-dateAndTime {
+    padding-top: 6px;
+    padding-left: 80px;
+}
+
+.dialog-actions {
+    padding-top: 10px;
+    padding-left: 130px;
+}
+
+.sub-task {
+    margin-left: 50px;
+    margin-top: 10px;
+    margin-bottom: 4px;
+}
+
+.sub-task-input,
+.sub-task-priority,
+.sub-task-date,
+.sub-task-time,
+.sub-task-edit,
+.sub-task-del {
+    margin-right: 10px;
+}
+
+#importFileInput {
+    display: none;
+}
+
+@media screen and (max-width: 650px) {
+    .container {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .container {
+        width: 99%;
+        margin-top: 5px;
+    }
+}
