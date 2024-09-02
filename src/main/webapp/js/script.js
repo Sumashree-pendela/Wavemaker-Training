@@ -1,169 +1,477 @@
-var todo = document.getElementById("inputField");
-var priority = document.getElementById("todoPriority");
-var addButton = document.getElementById("addTodo");
-var todoContainer = document.getElementById("todosContainer");
-var dialog = document.getElementById("dialog-content");
-var dialogInput = document.getElementById("dialogInput");
-var dialogPriority = document.getElementById("dialogPriority");
-var dialogDate = document.getElementById("dialogDate");
-var dialogTime = document.getElementById("dialogTime");
-var dialogSave = document.getElementById("dialog-save");
-var dialogCancel = document.getElementById("dialog-cancel");
-var todoCounter = 0;
-var theme = document.getElementById("theme");
-var search = document.getElementById("todoSearch");
-var todoTime = document.getElementById("todoTime");
-var todoDate = document.getElementById("todoDate");
-var todoSort = document.getElementById("todoSort");
-var subtask = document.getElementById("subTaskDialogInput");
-var subTaskDialog = document.getElementById("subTaskDialog");
-var subTaskPriority = document.getElementById("subTaskDialogPriority");
-var subTaskDate = document.getElementById("subTaskDialogDate");
-var subTaskTime = document.getElementById("subTaskDialogTime");
-var subTaskSave = document.getElementById("subTask-dialog-save");
-var subTaskCancel = document.getElementById("subTask-dialog-cancel");
-var logout = document.getElementById("logoutButton");
-var subTaskCounter = 0;
-var currentParentTodo;
+const leaveContainer = document.getElementById('leaveContainer');
+const teamLeaveContainer = document.getElementById('teamLeaveContainer');
+const logoutButton = document.getElementById('logoutBtn');
+const teamLeavesTab = document.getElementById('teamLeaveRequestsTab');
+const personalLeavesTab = document.getElementById('leaveRequestsTab');
+const addLeaveBtn = document.getElementById('addLeaveBtn');
+const teamHeader = document.getElementById('team-leave-header');
+const cancelButton = document.getElementById('cancelButton');
+const profilePic = document.getElementById('profilePic');
+const userName = document.getElementById('userName');
+var gender = "";
+const profileContainer = document.getElementById('profileContainer');
+const employeeName = document.getElementById('employeeName');
+const employeeDOB = document.getElementById('employeeDOB');
+const employeeGender = document.getElementById('employeeGender');
+const employeePhone = document.getElementById('employeePhone');
+const closeDialogButton = document.getElementById('closeDialog');
+const dialog = document.getElementById('employeeDialog');
+const trackerName = document.getElementById('trackerName');
+const trackerUsed = document.getElementById('trackerUsed');
+const trackerLeft = document.getElementById('trackerUsed');
+const trackerTotal = document.getElementById('trackerUsed');
+const trackerDialog = document.getElementById('leaveTrackerDialog');
+const trackerContent = document.getElementById('leaveTrackerContent');
+const teamTrackerContent = document.getElementById('teamLeaveTrackerContent');
 
-loadTasks();
+const leaveNameMapping = {
+    'SICK_LEAVE': 'Sick',
+    'CASUAL': 'Casual',
+    'MATERNITY': 'Maternity',
+    'PAID_LEAVE': 'Paid',
+    'PATERNITY': 'Paternity'
+};
+
+const leaveStatusMapping = {
+    'PENDING': 'Pending',
+    'REJECTED': 'Rejected',
+    'APPROVED': 'Approved'
+};
+
+logoutButton.style.display = 'none';
+userName.style.display = 'none';
+
+document.addEventListener('DOMContentLoaded', () => {
+leaveRequestsTab.classList.add('active');
+teamHeader.style.display = 'none';
+    saveLeaves();
+    fetchUserProfile();
+});
+
+    // Show username and logout button when profile picture is clicked
+    profilePic.addEventListener('click', function() {
+   if (userName.style.display === 'none' || userName.style.display === '') {
+               fetchUserProfile(); // Fetch the user profile name
+               userName.style.display = 'block';
+               logoutButton.style.display = 'block';
+           } else {
+               userName.style.display = 'none';
+               logoutButton.style.display = 'none';
+           }
+    });
+
+teamLeavesTab.addEventListener('click', function() {
+    console.log("inside team tab...");
+
+     leaveRequestsTab.classList.remove('active');
+     teamLeaveRequestsTab.classList.add('active');
+    teamHeader.style.display = 'flex';
+    teamLeaveContainer.style.display = 'block';
+    leaveContainer.style.display = 'none';
+    addLeaveBtn.style.display = 'none';
+    trackerContent.style.display = 'none';
+
+    saveTeamLeaves();
+});
+
+personalLeavesTab.addEventListener('click', function() {
+    // Show personal leave container and hide team leave container
+    leaveRequestsTab.classList.add('active');
+    teamLeaveRequestsTab.classList.remove('active');
+    leaveContainer.style.display = 'block';
+    teamLeaveContainer.style.display = 'none';
+    addLeaveBtn.style.display = 'block';
+    teamHeader.style.display = 'none';
+    trackerContent.style.display = 'flex';
+});
+
+document.getElementById('addLeaveBtn').addEventListener('click', function() {
+
+   fetchUserProfile();
+console.log("Inside add leave btn function......");
+console.log("gender.." + gender);
+
+const leaveNameSelect = document.getElementById('leaveName');
+    const maternityOption = leaveNameSelect.querySelector('option[value="MATERNITY"]');
+    const paternityOption = leaveNameSelect.querySelector('option[value="PATERNITY"]');
+
+    if (gender === 'MALE') {
+    console.log("Inside male if");
+        maternityOption.style.display = 'none';
+        paternityOption.style.display = 'block';
+    } else if (gender === 'FEMALE') {
+    console.log("Inside female if");
+        paternityOption.style.display = 'none';
+        maternityOption.style.display = 'block';
+    }
+
+
+ const dateFromInput = document.getElementById('dateFrom');
+     const dateToInput = document.getElementById('dateTo');
+
+     // Get today date
+     const today = new Date().toISOString().split('T')[0];
+
+     // Setting min attribute
+     dateFromInput.setAttribute('min', today);
+     dateToInput.setAttribute('min', today);
+
+     // changing dateTo min attribute..
+     dateFromInput.addEventListener('change', function() {
+         dateToInput.setAttribute('min', dateFromInput.value);
+     });
+
+    document.getElementById('leaveForm').style.display = 'block';
+
+});
+
+      function fetchUserProfile() {
+      console.log("Inside fetch profile..");
+            fetch('http://localhost:8080/leave_management//leave/employee?profile=1')
+                .then(response => response.json())
+                .then(data => {
+                console.log(data.gender);
+                    userName.textContent = data.name;
+                    gender = data.gender;
+                })
+                .catch(error => {
+                    console.error('Error fetching profile data:', error);
+                });
+        }
+
+cancelButton.addEventListener('click', function() {
+document.getElementById('leaveRequestForm').reset();
+document.getElementById('leaveForm').style.display = 'none';
+})
 
 logoutButton.addEventListener('click', function() {
-    // Perform the POST request to the logout endpoint
-    fetch('http://localhost:8080/todo/logout', {
+    console.log("inside logout btn");
+    fetch('http://localhost:8080/leave_management/logout', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
-        },
+        }
     })
     .then(response => {
         if (response.ok) {
-            // Redirect to login.html after successful logout
+            // Redirecting to login.html
             window.location.href = 'login.html';
         } else {
             console.error('Logout failed:', response.statusText);
         }
     })
     .catch(error => {
-        // Handle network errors or other issues
         console.error('Network error during logout:', error);
     });
 });
 
-
-addButton.addEventListener('click', addToDo);
-
-subTaskSave.addEventListener('click', addSubTodo);
-
-subTaskCancel.addEventListener('click', function () {
-    subTaskDialog.style.display = 'none';
-});
-
-
-theme.addEventListener('click', themeChange);
-
-search.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        searchTodos();
-    }
-
-});
-
-    window.unload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        console.log("url params..")
-        console.log(urlParams);
-
-        if (urlParams.has('error') && urlParams.get('error') === 'invalidUsername') {
-            document.getElementById('errorMessage').style.display = 'block';
+function saveLeaves() {
+    fetch('http://localhost:8080/leave_management/leave/leave_management', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
         }
-    }
+    })
+    .then(response => response.json())
+    .then(data => {
+        leaveContainer.querySelectorAll('.leave-item').forEach(item => item.remove());
 
-document.getElementById('export').addEventListener('click', exportTasks);
-
-document.getElementById('importFileInput').addEventListener('change', importTasks);
-
-todoSort.addEventListener('click', function () {
-    console.log(todoSort.value);
-
-    if (todoSort.value === 'Priority') {
-        sortTodoByPriority();
-    } else if (todoSort.value === 'Time') {
-        sortTodoByTime();
-    }
-});
-
-function requestNotificationPermission() {
-    if (Notification.permission !== "granted") {
-        Notification.requestPermission().then(permission => {
-            console.log('Notification permission:', permission);
+        // Iterate over each leave request and create leave items
+        data.forEach(leave => {
+            createLeaveRequest(leave.dateFrom, leave.dateTo, leave.leaveName, leave.reason, leave.status, leave.appliedDate);
         });
-    }
+    })
+    .catch(error => {
+        console.error('Error fetching leave requests:', error);
+    });
+
+   //leaves tracker..
+    leaveTracker();
+
+}
+
+function leaveTracker() {
+    console.log("inside leave tracker...");
+    const apiUrl = 'http://localhost:8080/leave_management/leave/leaveTracker';
+    fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+        // Get the dialog container
+        const dialog = document.getElementById('leaveTrackerContent');
+        dialog.innerHTML = '';
+
+        // Creating heading
+        const headingDiv = document.createElement('div');
+        headingDiv.classList.add('heading');
+        headingDiv.innerHTML = `
+            <p><strong>Name</strong></p>
+            <p><strong>Used</strong></p>
+            <p><strong>Left</strong></p>
+            <p><strong>Total</strong></p>
+        `;
+        dialog.appendChild(headingDiv);
+
+        // Creating rows..
+        data.forEach(leaveTracker => {
+            const rowDiv = document.createElement('div');
+            rowDiv.classList.add('row');
+               const newLeaveName = leaveNameMapping[leaveTracker.leaveName] || leaveTracker.leaveName;
+            rowDiv.innerHTML = `
+                <p><strong>${newLeaveName}</strong></p>
+                <p>${leaveTracker.usedLeaves}</p>
+                <p>${leaveTracker.leavesLeft}</p>
+                <p>${leaveTracker.totalLeaves}</p>
+            `;
+            dialog.appendChild(rowDiv);
+        });
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
 }
 
 
-function addToDo() {
-    let todoName = todo.value;
-    let priorityValue = priority.value.toUpperCase();
-    let timeValue = todoTime.value;
-    let dateValue = todoDate.value;
+function saveTeamLeaves() {
+    console.log("Inside Team leaves...");
+    fetch('http://localhost:8080/leave_management/leave/employeeLeaves', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Data of employee leaves...");
+        console.log(data);
 
-    if (todoName.trim() === '' || priorityValue.trim() === '') {
-        alert("To Do Name and Priority cannot be empty");
-        return;
+        teamLeaveContainer.querySelectorAll('.team-leave-item').forEach(item => item.remove());
+        data.forEach(leave => {
+        console.log("Leave obj");
+        console.log(leave);
+            createTeamLeaveRequest(leave.id, leave.dateFrom, leave.dateTo, leave.leaveName, leave.reason, leave.status, leave.employeeName, leave.appliedBy, leave.appliedDate);
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching team leave requests:', error);
+    });
+}
+
+document.getElementById('leaveRequestForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const dateFrom = document.getElementById('dateFrom').value;
+    const dateTo = document.getElementById('dateTo').value;
+    const leaveName = document.getElementById('leaveName').value;
+    const reason = document.getElementById('reason').value;
+
+    if(dateTo < dateFrom) {
+    alert("Correct the selected dateFrom and dateTo");
     }
 
-    let now = new Date();
-    let currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-    let currentDate = now.toISOString().split('T')[0];
-
-    if (dateValue < currentDate) {
-        alert("You cannot add previous dates");
-        return;
-    }
-
-    if (dateValue === currentDate && timeValue < currentTime) {
-        alert("Add the time after " + currentTime);
-        return;
-    }
-
-    // Ensure timeValue is in "HH:mm:ss" format
-    if (timeValue.length <= 5) {
-        // Add ":00" if timeValue doesn't include seconds
-        timeValue = `${timeValue}:00`;
-    }
-
-    // Convert timeValue to 24-hour format if it's not already
-    let timeParts = timeValue.split(':');
-    let hours = parseInt(timeParts[0], 10);
-    let minutes = timeParts[1];
-    let seconds = timeParts[2] || '00'; // Default seconds to "00"
-
-    if (hours < 10) {
-        hours = `0${hours}`; // Ensure two-digit hour format
-    }
-
-    timeValue = `${hours}:${minutes}:${seconds}`;
-
-    // Create a new todo object
-    const newTodo = {
-        name: todoName,
-        priority: priorityValue,
-        todoDate: dateValue,
-        todoTime: timeValue
+    const requestData = {
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+        leaveName: leaveName,
+        reason: reason
     };
 
-    // Log the request value for debugging
-    console.log("Request value....");
-    console.log(JSON.stringify(newTodo));
-
-    // Make a POST request to the backend API
-    fetch('http://localhost:8080/todo/todo', {
+    console.log("Request data:");
+    console.log(requestData);
+    fetch('http://localhost:8080/leave_management/leave/leave_management', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(newTodo)
+        body: JSON.stringify(requestData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errorData => {
+                throw new Error(errorData.error || 'Something went wrong');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Leave request submitted:', data);
+        createLeaveRequest(data.dateFrom, data.dateTo, data.leaveName, data.reason, data.status, data.appliedDate);
+        document.getElementById('leaveRequestForm').reset();
+        document.getElementById('leaveForm').style.display = 'none';
+    })
+    .catch(error => {
+        console.error('Error occurred:', error);
+        alert("Error: " + error.message);
+    });
+});
+
+function createLeaveRequest(dateFrom, dateTo, leaveName, reason, status, appliedDate) {
+
+const newLeaveName = leaveNameMapping[leaveName] || leaveName;
+const newStatus = leaveStatusMapping[status] || status;
+    const leaveItem = document.createElement('div');
+    leaveItem.className = 'row mb-3 leave-item';
+
+    leaveItem.innerHTML = `
+        <div class="col-md-2">${appliedDate}</div>
+        <div class="col-md-2">${newLeaveName}</div>
+        <div class="col-md-2">${dateFrom}</div>
+        <div class="col-md-2">${dateTo}</div>
+        <div class="col-md-2">${reason}</div>
+        <div class="col-md-2">${newStatus}</div>
+    `;
+
+    leaveContainer.appendChild(leaveItem);
+    leaveTracker();
+}
+
+function createTeamLeaveRequest(leaveId, dateFrom, dateTo, leaveName, reason, status, employee, appliedBy, appliedDate) {
+    console.log("Inside team leave request...");
+    console.log(employee, dateFrom, dateTo, leaveName, reason, status);
+
+const newLeaveName = leaveNameMapping[leaveName] || leaveName;
+const newStatus = leaveStatusMapping[status] || status;
+
+    let teamLeaveItem = document.createElement('div');
+    teamLeaveItem.classList.add('team-leave-item');
+    teamLeaveItem.setAttribute('id', leaveId);
+
+    let dateDiv = document.createElement('div');
+        dateDiv.classList.add('team-date');
+        dateDiv.textContent = appliedDate;
+        teamLeaveItem.appendChild(dateDiv);
+
+    let employeeDiv = document.createElement('div');
+    employeeDiv.classList.add('team-employee');
+    employeeDiv.textContent = employee;
+    teamLeaveItem.appendChild(employeeDiv);
+
+    let leaveTypeDiv = document.createElement('div');
+    leaveTypeDiv.classList.add('team-leaveType');
+    leaveTypeDiv.textContent = newLeaveName;
+    teamLeaveItem.appendChild(leaveTypeDiv);
+
+    let dateFromDiv = document.createElement('div');
+    dateFromDiv.classList.add('team-dateFrom');
+    dateFromDiv.textContent = dateFrom;
+    teamLeaveItem.appendChild(dateFromDiv);
+
+    let dateToDiv = document.createElement('div');
+    dateToDiv.classList.add('team-dateTo');
+    dateToDiv.textContent = dateTo;
+    teamLeaveItem.appendChild(dateToDiv);
+
+    let reasonDiv = document.createElement('div');
+    reasonDiv.classList.add('team-reason');
+    reasonDiv.textContent = reason;
+    teamLeaveItem.appendChild(reasonDiv);
+
+    let statusDiv = document.createElement('div');
+    statusDiv.classList.add('team-status');
+    statusDiv.textContent = newStatus;
+    teamLeaveItem.appendChild(statusDiv);
+
+    let approveButton, rejectButton;
+    let buttonContainer = document.createElement('div');
+
+    let detailsButton = document.createElement('button');
+    detailsButton.classList.add('btn', 'btn-secondary', 'team-details');
+    detailsButton.textContent = 'Details';
+    buttonContainer.appendChild(detailsButton);
+
+if (status === 'PENDING') {
+        // Creating the button container div
+        buttonContainer.classList.add('team-button');
+
+        // Create and append the approve button
+        approveButton = document.createElement('button');
+        approveButton.classList.add('btn', 'btn-success', 'team-approve');
+        approveButton.textContent = 'Approve';
+        buttonContainer.appendChild(approveButton);
+
+        // Create and append the reject button
+        rejectButton = document.createElement('button');
+        rejectButton.classList.add('btn', 'btn-danger', 'team-reject');
+        rejectButton.textContent = 'Reject';
+        buttonContainer.appendChild(rejectButton);
+
+    } else {
+        // hing when status not pending
+        teamLeaveItem.classList.add('no-buttons');
+    }
+
+   teamLeaveItem.appendChild(buttonContainer);
+    teamLeaveContainer.appendChild(teamLeaveItem);
+    detailsButtonEventListener(detailsButton, appliedBy);
+
+    if (approveButton && rejectButton) {
+        teamLeaveEventListener(approveButton, rejectButton, teamLeaveItem, appliedBy);
+    }
+}
+
+function detailsButtonEventListener(detailsButton, appliedBy) {
+detailsButton.addEventListener('click', () => {
+    detailsEventListener(detailsButton, appliedBy);
+});
+}
+
+function detailsEventListener(detailsButton, employeeId) {
+        const apiUrl = `http://localhost:8080/leave_management/leave/employee?employeeId=${employeeId}`;
+
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Details of employee:", data);
+                employeeName.textContent = data.name;
+                employeeDOB.textContent = data.dob;
+                employeeGender.textContent = data.gender;
+                employeePhone.textContent = data.phoneNumber
+                dialog.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+ }
+
+ closeDialogButton.addEventListener('click', function() {
+ dialog.style.display = 'none';
+ });
+
+
+function teamLeaveEventListener(approveButton, rejectButton, teamLeaveItem, appliedBy) {
+    approveButton.addEventListener('click', function() {
+        let leaveId = teamLeaveItem.getAttribute('id');
+        sendEmployeeIdForLeaveTracker(appliedBy, 'Approve', leaveId, teamLeaveItem);
+    });
+
+    rejectButton.addEventListener('click', function() {
+        let leaveId = teamLeaveItem.getAttribute('id');
+         sendEmployeeIdForLeaveTracker(appliedBy, 'Reject', leaveId, teamLeaveItem);
+    });
+}
+
+
+function sendEmployeeIdForLeaveTracker(appliedBy, buttonName, leaveId, teamLeaveItem) {
+
+ console.log("inside team leave tracker...");
+    const apiUrl = `http://localhost:8080/leave_management/leave/leaveTracker?appliedBy=${appliedBy}`;
+    fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
     .then(response => {
         if (!response.ok) {
@@ -172,704 +480,108 @@ function addToDo() {
         return response.json();
     })
     .then(data => {
-        console.log('Todo added:', data);
-        loadTasks();
+        const dialog = document.getElementById('teamLeaveTrackerContent');
+        dialog.style.display = 'flex';
+        dialog.style.flexDirection = 'column';
+        dialog.innerHTML = '';
+
+        // Creating  heading
+        const headingDiv = document.createElement('div');
+        headingDiv.style.display = 'flex';
+        headingDiv.style.justifyContent = 'space-between';
+        headingDiv.classList.add('heading');
+        headingDiv.innerHTML = `
+            <p><strong>Name</strong></p>
+            <p><strong>Used</strong></p>
+            <p><strong>Left</strong></p>
+            <p><strong>Total</strong></p>
+        `;
+        dialog.appendChild(headingDiv);
+
+        // Creating data rows
+        data.forEach(teamLeaveTracker => {
+            const rowDiv = document.createElement('div');
+            rowDiv.style.display = 'flex';
+
+            rowDiv.classList.add('column');
+               const newLeaveName = leaveNameMapping[teamLeaveTracker.leaveName] || teamLeaveTracker.leaveName;
+            rowDiv.innerHTML = `
+                <p><strong>${newLeaveName}</strong></p>
+                <p>${teamLeaveTracker.usedLeaves}</p>
+                <p>${teamLeaveTracker.leavesLeft}</p>
+                <p>${teamLeaveTracker.totalLeaves}</p>
+            `;
+            dialog.appendChild(rowDiv);
+        });
+
+         const buttonContainer = document.createElement('div');
+                buttonContainer.classList.add('button-container');
+                 buttonContainer.style.marginTop = 'auto';
+                         buttonContainer.style.display = 'flex';
+                         buttonContainer.style.justifyContent = 'flex-end';
+
+                // Create the first button with the provided buttonName
+                const actionButton = document.createElement('button');
+                actionButton.textContent = buttonName;
+                actionButton.classList.add('btn', 'btn-primary', 'teamApproveButton');
+
+                // Optionally, add an event listener to the action button
+                actionButton.addEventListener('click', () => {
+                 if (buttonName === 'Approve') {
+                 console.log("Button Name.." + buttonName);
+                 dialog.style.display= 'none';
+                 //1 for approve
+                 sendLeaveAction(leaveId, 1, teamLeaveItem);
+                 } else {
+                 dialog.style.display= 'none';
+                 //0 for reject
+                 sendLeaveAction(leaveId, 0, teamLeaveItem);
+                 }
+
+                });
+
+                // Creating the close button
+                const closeButton = document.createElement('button');
+                closeButton.textContent = 'Close';
+                closeButton.classList.add('btn', 'btn-secondary', 'teamCloseButton'); // Bootstrap classes for styling
+
+                closeButton.addEventListener('click', () => {
+                dialog.style.display= 'none';
+                    dialog.innerHTML = '';
+                });
+
+                buttonContainer.appendChild(actionButton);
+                buttonContainer.appendChild(closeButton);
+
+                dialog.appendChild(buttonContainer);
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
     });
-
-    // Clear input fields
-    todo.value = '';
-    priority.value = '';
-    todoTime.value = '';
-    todoDate.value = '';
 }
 
-
-function createToDo(todoName, priorityValue, todoId, timeValue, dateValue, completed) {
-
-    const todo = document.createElement('div');
-    todo.classList.add('todo');
-    todo.setAttribute('draggable', 'true');
-    todo.setAttribute('id', todoId);
-
-
-    let todoValue = document.createElement('input');
-    todoValue.classList.add("todo-input");
-    todoValue.type = "text";
-    todoValue.value = todoName;
-    todoValue.setAttribute('readOnly', 'readOnly');
-    todo.appendChild(todoValue);
-
-    const todoPriority = document.createElement('select');
-    todoPriority.classList.add("todo-priority");
-    todoPriority.innerHTML = `
-        <option value="High">High</option>
-        <option value="Medium">Medium</option>
-        <option value="Low">Low</option>
-    `;
-    todoPriority.value = normalizePriority(priorityValue);
-    todoPriority.setAttribute('readOnly', 'readOnly');
-    todoPriority.disabled = true;
-    todo.appendChild(todoPriority);
-
-    let todoDate = document.createElement('input');
-    todoDate.classList.add("todo-date");
-    todoDate.type = "date";
-    todoDate.value = dateValue;
-    todo.appendChild(todoDate);
-
-    let todoTime = document.createElement('input');
-    todoTime.classList.add("todo-time");
-    todoTime.type = "time";
-    todoTime.value = timeValue;
-    todoTime.setAttribute('readonly', 'readonly');
-    todo.appendChild(todoTime);
-
-     if (!completed) {
-            let todoEdit = document.createElement('button');
-            todoEdit.classList.add('btn', 'btn-success', 'todo-edit');
-            todoEdit.type = "button";
-            todoEdit.innerHTML = "Edit";
-            todo.appendChild(todoEdit);
-
-            let todoDelete = document.createElement('button');
-            todoDelete.classList.add('btn', 'btn-danger', 'todo-del');
-            todoDelete.type = "button";
-            todoDelete.innerHTML = "Del";
-            todo.appendChild(todoDelete);
-
-            let todoSubtask = document.createElement('button');
-            todoSubtask.classList.add('btn', 'btn-primary', 'todo-subtask');
-            todoSubtask.type = "button";
-            todoSubtask.innerHTML = "+";
-            todo.appendChild(todoSubtask);
-
-              let todoCompleted = document.createElement('button');
-                   todoCompleted.classList.add('btn', 'btn-success', 'todo-completed');
-                   todoCompleted.type = "button";
-                   todoCompleted.innerHTML = "Done";
-                   todo.appendChild(todoCompleted);
-
-            todoEventListener(todo, todoEdit, todoDelete, todoSubtask, todoCompleted);
-        }
-
-    todoContainer.appendChild(todo);
-//    sortTodoByPriority();
-
-    return todo;
-
-}
-
-function normalizePriority(priority) {
-    switch (priority.toUpperCase()) {
-        case 'HIGH':
-            return 'High';
-        case 'MEDIUM':
-            return 'Medium';
-        case 'LOW':
-            return 'Low';
-        default:
-            return 'Medium';
-    }
-}
-
-
-function todoEventListener(todo, todoEdit, todoDelete, todoSubtask, todoCompleted) {
-    const todoItem = todo.querySelector('.todo-input');
-    const todoPriority = todo.querySelector('.todo-priority');
-    const todoDate = todo.querySelector('.todo-date');
-    const todoTime = todo.querySelector('.todo-time');
-
-console.log("Inside todo event");
-    todoCompleted.addEventListener('click', () => {
-           const todoId = todo.getAttribute('id');
-
-           // Make a POST request with the completed status in the URL path
-           fetch(`http://localhost:8080/todo/todo?id=${todoId}`, {
-               method: 'POST',
-               headers: {
-                   'Content-Type': 'application/json'
-               }
-           })
-           .then(response => {
-               if (!response.ok) {
-                   console.error('Network response was not ok');
-               }
-               return response.text();
-           })
-           .then(() => {
-               // Toggle the completed class in the UI
-               todoItem.classList.toggle('completed');
-              todoEdit.disabled = true;
-                      todoDelete.disabled = true;
-                      todoCompleted.disabled = true;
-
-                      console.log('Updated Button States:', {
-                                  edit: todoEdit.disabled,
-                                  delete: todoDelete.disabled,
-                                  complete: todoCompleted.disabled
-                              });
-               loadTasks(); // Optionally, reload the tasks if needed
-           })
-           .catch(error => {
-               console.error('There was a problem with the completion operation:', error);
-           });
-       });
-
-    todoEdit.addEventListener('click', () => {
-        if (todoEdit.innerText === "Edit") {
-            // Set global/current variables for editing
-            currentTodo = todo; // Store the whole todo element for later use
-            dialogInput.value = todoItem.value;
-            dialogPriority.value = todoPriority.value;
-            dialogDate.value = todoDate.value;
-            dialogTime.value = todoTime.value;
-
-            todoEdit.innerText = "Save";
-            dialog.style.display = 'block';
+function sendLeaveAction(leaveId, approve, teamLeaveItem) {
+    let url = `http://localhost:8080/leave_management/leave/leave_management?leaveId=${leaveId}&approve=${approve}`;
+    fetch(url, {
+        method: 'PUT'
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log(`Leave action sent successfully for leaveId: ${leaveId} with approve status: ${approve}`);
+            if (approve === 1) {
+                            teamLeaveItem.classList.add('approved');
+                            teamLeaveItem.querySelector('.status').textContent = 'Approved';
+                        } else {
+                            teamLeaveItem.classList.add('rejected');
+                            teamLeaveItem.querySelector('.status').textContent = 'Rejected';
+                        }
         } else {
-            todoEdit.innerText = "Edit";
+            console.error('Failed to send leave action:', response.statusText);
         }
+    })
+    .catch(error => {
+        console.error('Error in sending leave action:', error);
     });
-
-    dialogSave.addEventListener('click', () => {
-        if (dialogInput.value.trim() === '') {
-            alert("To do name cannot be empty");
-            return;
-        }
-
-        if (dialogPriority.value === '') {
-            alert("Select priority for to do");
-            return;
-        }
-
-        let now = new Date();
-        let dateValue = dialogDate.value;
-        let currentDate = now.toISOString().split('T')[0];
-
-        if (dateValue < currentDate) {
-            alert("You cannot add previous dates");
-            return;
-        }
-
-        if (dialogTime.value === '') {
-            alert("Time cannot be empty");
-            return;
-        }
-
-        let timeValue = dialogTime.value;
-        let currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-
-        if (dateValue === currentDate && timeValue < currentTime) {
-            alert("Add the time after " + currentTime);
-            return;
-        }
-
-        const todoId = currentTodo.getAttribute('id'); // Use the stored todo element
-        const updatedTodo = {
-            name: dialogInput.value,
-            priority: dialogPriority.value.toUpperCase(),
-            todoDate: dialogDate.value,
-            todoTime: dialogTime.value
-        };
-
-        fetch(`http://localhost:8080/todo/todo?id=${todoId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedTodo)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-        })
-        .then(() => {
-            dialog.style.display = 'none';
-            todoEdit.innerText = 'Edit';
-            loadTasks();
-            location.reload();// Optionally, reload tasks if needed
-        })
-        .catch(error => {
-            console.error('There was a problem with the update operation:', error);
-        });
-    });
-
-    dialogCancel.addEventListener('click', () => {
-        dialog.style.display = 'none';
-        todoEdit.innerText = 'Edit';
-    });
-
-
-    todoDelete.addEventListener('click', () => {
-        const todoId = todo.getAttribute('id');
-        console.log(todoId);
-
-        fetch(`http://localhost:8080/todo/todo?id=${todoId}`, {
-            method: 'DELETE',
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(text => {
-                    throw new Error(`Network response was not ok: ${response.statusText} - ${text}`);
-                });
-            }
-            // Assuming no content is returned on successful deletion
-            return response.text(); // Or you can proceed without returning anything if not needed
-        })
-        .then(() => {
-            todoContainer.removeChild(todo);
-            loadTasks(); // Reload tasks to reflect the deletion
-        })
-        .catch(error => {
-            console.error('There was a problem with the delete operation:', error);
-        });
-    });
-
-
-
-
-    todo.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', todo.getAttribute('id'));
-        e.dataTransfer.effectAllowed = 'move';
-    });
-
-    todo.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-    });
-
-    todo.addEventListener('drop', (e) => {
-        e.preventDefault();
-        const draggedElementId = e.dataTransfer.getData('text/plain');
-        const draggedElement = document.getElementById(draggedElementId);
-
-        if (draggedElement !== todo) {
-            todoContainer.insertBefore(draggedElement, todo);
-            saveTasks();
-        }
-    });
-
-    todoSubtask.addEventListener('click', () => {
-        currentParentTodo = todo;
-        subTaskDialog.style.display = 'block';
-    });
+    saveTeamLeaves();
 }
 
-function fetchAndSaveTasks() {
-    fetch('http://localhost:8080/todo/todo')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Assuming the data returned from the API is in the correct format
-            const allTasks = data.map(task => {
-                return {
-                    id: task.id,
-                    todoName: task.name,
-                    todoPriority: task.priority,
-                    todoTime: task.todoTime,
-                    todoDate: task.todoDate,
-                    subtasks: task.subtasks.map(subTask => ({
-                        subTaskId: subTask.subTaskId,
-                        subTaskName: subTask.subTaskName,
-                        subTaskPriority: subTask.subTaskPriority,
-                        subTaskTime: subTask.subTaskTime,
-                        subTaskDate: subTask.subTaskDate
-                    }))
-                };
-            });
-
-            localStorage.setItem('allTodos', JSON.stringify(allTasks));
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-}
-
-
-function loadTasks() {
-    const todoContainer = document.getElementById('todosContainer'); // Replace with the actual ID of your task container
-    todoContainer.innerHTML = '';
-
-    fetch('http://localhost:8080/todo/todo')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(allTasks => {
-            console.log(allTasks);
-
-            // Sort tasks: completed tasks go to the bottom
-            allTasks.sort((a, b) => {
-                           // Convert completed values to boolean if they are strings
-                           const aCompleted = a.completed === true || a.completed === "true";
-                           const bCompleted = b.completed === true || b.completed === "true";
-
-                           // If both are equal (either both completed or not completed), return 0 to preserve the order
-                           if (aCompleted === bCompleted) {
-                               return 0;
-                           }
-                           // Sort so that completed tasks go to the bottom
-                           return aCompleted ? 1 : -1;
-                       });
-
-            allTasks.forEach(task => {
-                const todo = createToDo(task.name, task.priority, task.id, task.todoTime, task.todoDate, task.completed);
-
-            });
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-}
-
-
-function themeChange() {
-    console.log("Inside ")
-    if (theme.innerText === 'Light') {
-        document.body.classList.remove('dark-mode');
-        document.body.classList.add('light-mode');
-        theme.innerText = 'Dark';
-    } else {
-        document.body.classList.remove('light-mode');
-        document.body.classList.add('dark-mode');
-        theme.innerText = 'Light';
-    }
-}
-
-function searchTodos() {
-    console.log("Inside search method");
-
-    var searchValue = search.value.toLowerCase();
-    console.log(searchValue);
-    const todos = document.querySelectorAll(".todo");
-
-    todos.forEach(todo => {
-        const todoName = todo.querySelector('.todo-input').value.toLowerCase();
-        if (todoName.includes(searchValue)) {
-            todo.style.display = 'block';
-        } else {
-            todo.style.display = 'none';
-        }
-
-//        const subTasks = todo.querySelectorAll('.todo-subtask');
-//
-//        if (subTasks !== '') {
-//            subTasks.forEach(subtask => {
-//                const subtaskName = subtask.querySelector('.sub-task-input').value.toLowerCase();
-//                if (subtaskName.includes(searchValue)) {
-//                    subtask.style.display = 'block';
-//                } else {
-//                    subtask.style.display = 'none';
-//                }
-//            });
-//        }
-    });
-}
-
-
-async function sortTodoByPriority() {
-    try {
-        // Fetch sorted todos from the backend API
-        const response = await fetch('http://localhost:8080/todo/todoSort');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        const todos = await response.json();
-
-        todoContainer.innerHTML = '';
-
-        // Add todos to the container
-       allTasks.forEach(task => {
-                       const todo = createToDo(task.name, task.priority, task.id, task.todoTime, task.todoDate, task.completed);
-                   });
-
-    } catch (error) {
-        console.error('Error fetching or displaying todos:', error);
-    }
-}
-
-
-function sortTodoByTime() {
-    const todos = Array.from(document.querySelectorAll(".todo"));
-
-    console.log(todos);
-    todos.sort((todo1, todo2) => {
-        let date1 = todo1.querySelector('.todo-date').value;
-        let date2 = todo2.querySelector('.todo-date').value;
-        let time1 = todo1.querySelector('.todo-time').value;
-        let time2 = todo2.querySelector('.todo-time').value;
-
-        console.log(date1 + date2);
-
-        if (date1 === date2) {
-            return time1.localeCompare(time2);
-        }
-
-        return date1.localeCompare(date2);
-    });
-
-    todoContainer.innerHTML = '';
-    todos.forEach(todo => todoContainer.appendChild(todo));
-}
-
-function addSubTodo() {
-    let subTaskName = subtask.value;
-
-    if (subTaskName.trim() == '' || subTaskName == '') {
-        alert("Sub Task Name cannot be empty");
-        return;
-    }
-
-    let allTasks = JSON.parse(localStorage.getItem('allTodos')) || [];
-
-    let duplicateSubTask = false;
-
-    allTasks.forEach(task => {
-        task.subtasks.forEach(subTask => {
-            if (subTask.subTaskName.toLowerCase() === subTaskName.toLowerCase()) {
-                duplicateSubTask = true;
-            }
-        });
-    });
-
-    if (duplicateSubTask) {
-        alert("Sub Task already exists");
-        return;
-    }
-
-    let subTaskPriorityValue = subTaskPriority.value;
-
-    if (subTaskPriorityValue == '' || subTaskPriorityValue.trim() == '') {
-        alert("Select priority for the sub task");
-        return;
-    }
-
-    let now = new Date();
-
-    let subTaskTimeValue = subTaskTime.value;
-    let currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-
-    let subTaskDateValue = subTaskDate.value;
-    let currentDate = now.toISOString().split('T')[0];
-
-    if (subTaskDateValue < currentDate) {
-        alert("You cannot add previous dates");
-        return;
-    }
-
-    if (subTaskDateValue === currentDate) {
-        if (subTaskTimeValue < currentTime) {
-            alert("Add the time after " + currentTime);
-            return;
-        }
-    }
-
-    createSubTask(subTaskName, subTaskPriorityValue, `subtask-${++subTaskCounter}`, subTaskTimeValue, subTaskDateValue, currentParentTodo);
-
-    saveTasks();
-    subTaskDialog.style.display = 'none';
-    subtask.value = '';
-    subTaskPriority.value = '';
-    subTaskTime.value = '';
-    subTaskDate.value = '';
-}
-
-
-function createSubTask(subTaskName, subTaskPriorityValue, subTaskId, subTaskTimeValue, subTaskDateValue, parentTodo) {
-    const subTask = document.createElement('div');
-    subTask.classList.add('sub-task');
-    subTask.setAttribute('draggable', 'true');
-    subTask.setAttribute('id', subTaskId);
-
-    let subTaskValue = document.createElement('input');
-    subTaskValue.classList.add("sub-task-input");
-    subTaskValue.type = "text";
-    subTaskValue.value = subTaskName;
-    subTaskValue.setAttribute('readOnly', 'readOnly');
-    subTask.appendChild(subTaskValue);
-
-    const subTaskPriority = document.createElement('select');
-    subTaskPriority.classList.add("sub-task-priority");
-    subTaskPriority.innerHTML = `
-        <option value="High">High</option>
-        <option value="Medium">Medium</option>
-        <option value="Low">Low</option>
-    `;
-    subTaskPriority.value = subTaskPriorityValue;
-    subTaskPriority.setAttribute('readOnly', 'readOnly');
-    subTaskPriority.disabled = true;
-    subTask.appendChild(subTaskPriority);
-
-    let subTaskDate = document.createElement('input');
-    subTaskDate.classList.add("sub-task-date");
-    subTaskDate.type = "date";
-    subTaskDate.value = subTaskDateValue;
-    subTask.appendChild(subTaskDate);
-
-    let subTaskTime = document.createElement('input');
-    subTaskTime.classList.add("sub-task-time");
-    subTaskTime.type = "time";
-    subTaskTime.value = subTaskTimeValue;
-    subTaskTime.setAttribute('readonly', 'readonly');
-    subTask.appendChild(subTaskTime);
-
-    let subTaskEdit = document.createElement('button');
-    subTaskEdit.classList.add('btn', 'btn-success', 'sub-task-edit');
-    subTaskEdit.type = "button";
-    subTaskEdit.innerHTML = "Edit";
-    subTask.appendChild(subTaskEdit);
-
-    let subTaskDelete = document.createElement('button');
-    subTaskDelete.classList.add('btn', 'btn-danger', 'sub-task-del');
-    subTaskDelete.type = "button";
-    subTaskDelete.innerHTML = "Del";
-    subTask.appendChild(subTaskDelete);
-
-    subTaskEventListener(subTask, subTaskEdit, subTaskDelete);
-
-    if (parentTodo) {
-        parentTodo.appendChild(subTask);
-    } else {
-        todoContainer.appendChild(subTask);
-    }
-
-    return subTask;
-}
-
-
-function subTaskEventListener(subTask, subTaskEdit, subTaskDelete) {
-    const subTaskItem = subTask.querySelector('.sub-task-input');
-    const subTaskPriority = subTask.querySelector('.sub-task-priority');
-    const subTaskDate = subTask.querySelector('.sub-task-date');
-    const subTaskTime = subTask.querySelector('.sub-task-time');
-
-    subTaskEdit.addEventListener('click', () => {
-        if (subTaskEdit.innerText === "Edit") {
-            subTaskEdit.innerText = "Save";
-
-            subTaskItem.removeAttribute('readOnly');
-            subTaskPriority.disabled = false;
-            subTaskDate.removeAttribute('readOnly');
-            subTaskTime.removeAttribute('readOnly');
-
-        } else {
-            subTaskItem.setAttribute('readOnly', 'readOnly');
-            subTaskPriority.disabled = true;
-            subTaskDate.setAttribute('readOnly', 'readOnly');
-            subTaskTime.setAttribute('readOnly', 'readOnly');
-
-            subTaskEdit.innerText = "Edit";
-            saveTasks();
-        }
-    });
-
-    subTaskDelete.addEventListener('click', () => {
-        subTask.parentElement.removeChild(subTask);
-        saveTasks();
-    });
-
-    subTask.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', subTask.getAttribute('id'));
-        e.dataTransfer.effectAllowed = 'move';
-    });
-
-    subTask.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-    });
-
-    subTask.addEventListener('drop', (e) => {
-        e.preventDefault();
-        const draggedElementId = e.dataTransfer.getData('text/plain');
-        const draggedElement = document.getElementById(draggedElementId);
-
-        if (draggedElement !== subTask) {
-            todoContainer.insertBefore(draggedElement, subTask);
-            saveTasks();
-        }
-    });
-}
-
-function exportTasks() {
-    const allTasks = JSON.parse(localStorage.getItem('allTodos')) || [];
-    const dataStr = JSON.stringify(allTasks, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-
-    const exportFileDefaultName = 'tasks.json';
-
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
-}
-
-function importTasks(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = function (e) {
-        try {
-            const importedTasks = JSON.parse(e.target.result);
-            const existingTasks = JSON.parse(localStorage.getItem('allTodos')) || [];
-
-            const mergedTasks = existingTasks.concat(importedTasks);
-            localStorage.removeItem('allTodos');
-            localStorage.setItem('allTodos', JSON.stringify(mergedTasks));
-
-            loadTasks();
-        } catch (err) {
-            alert('Error reading the file. Make sure it is a valid JSON file.');
-        }
-    };
-
-    reader.readAsText(file);
-}
-
-function scheduleNotification(itemId, dateValue, timeValue) {
-
-    if (!("Notification" in window)) {
-        alert("Doesnt support notification");
-        return;
-    }
-
-    const taskDateTime = new Date(`${dateValue}T${timeValue}`);
-    const notificationTime = taskDateTime.getTime() - (10 * 60 * 1000); // 10 minutes before notification
-    console.log("Scheduled notification time: ", new Date(notificationTime));
-
-    if (notificationTime > Date.now()) {
-        const timeUntilNotification = notificationTime - Date.now();
-        console.log("Time until notification: ", timeUntilNotification);
-
-        setTimeout(() => {
-            showNotification(itemId);
-        }, timeUntilNotification);
-    } else {
-        console.log("Notification time is in the past, not scheduling.");
-    }
-}
-
-function showNotification(itemId) {
-    const item = document.getElementById(itemId);
-    const text = item.querySelector('.text').value;
-
-    if (Notification.permission === "granted") {
-        new Notification('Task Reminder', {
-            body: `Remainder: ${text} is due soon!`,
-            icon: 'path/to/icon.png'
-        });
-    } else {
-        console.log("Notification permission not granted.");
-    }
-}

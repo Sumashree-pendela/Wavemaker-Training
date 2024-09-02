@@ -1,125 +1,162 @@
-.container {
-    width: 860px;
-    padding-top: 30px;
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
 }
 
-h1 {
-    text-align: center;
+.leave-container {
+    display:block;
+    width:800px;
 }
 
-body.dark-mode .todo-container,
-body.dark-mode {
-    background-color: rgb(26, 22, 22);
-}
-
-.todo-container {
-background-color: #e6ffff
-}
-
-#todoSearch {
-    margin: 10px;
-}
-
-.todoInput {
-    width: 310px;
-}
-
-#todoPriority {
-    margin: 12px;
-    padding-top: 4px;
-    padding-bottom: 4px;
-}
-
-#todoSort {
-    height: 35px;
-    margin-left: 10px;
-    margin-top: 20px;
-}
-
-.todo-edit,
-.todo-del,
-.todo-date,
-.todo-time,
-.todo-subtask,.todo-completed {
-    margin-left: 13px;
-}
-
-.todo-input {
-    margin: 10px;
-}
-
-.todo-subtask {
-padding-right: 10px;
+.mainHeading {
+margin-left:365px;
+color: #3e7057;
+    font-weight: bold;
+    font-size: 38px;
 }
 
 
-.todo {
-padding: 1px;
-    display: block;
-    border: 1px solid rgb(101, 97, 97);
+.team-leave-header {
+    display: flex;
+    padding: 10px;
     margin-bottom: 10px;
-    margin-left: 3px;
-    margin-right: 3px;
-    background-color: #ffe6ff;
+    border: 1px solid black;
+    border-radius: 5px;
 }
 
-.todo-priority {
-    height: 30px;
-    width: 90px;
+.team-leave-item {
+    border: 1px solid #ddd;
+    display: flex;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    padding-left: 6px;
+    padding-top:7px;
+    background-color:  #d6f5f5
 }
 
-.dialog-content,
-.subTaskDialog {
+.team-employee,.team-leaveType, .team-dateFrom, .team-dateTo, .team-reason, .team-status, .team-date {
+     width:120px;
+    flex-direction: column;
+}
+
+.team-details {
+margin-right:10px;
+}
+
+.team-button {
+width: 180px;
+display: flex;
+}
+
+.team-approve, .team-reject {
+width: 100px;
+margin-right: 10px;
+}
+
+.team-action {
+padding-left: 50px;
+}
+
+.team-status {
+margin-right:15px;
+}
+
+.leave-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color:  #d6f5f5
+
+}
+
+.leave-item h4 {
+    margin: 0;
+    margin-bottom: 5px;
+}
+
+.logoutBtn, .userName {
+display: none;
+}
+
+#leave-header, #team-leave-header {
+border: 1px solid black;
+margin-bottom: 5px;
+ padding: 10px;
+ background-color:#ddddbb
+}
+
+.flex-column {
+    flex-direction: column;
+    border: 1px solid black;
+}
+
+#profileContainer {
+position:fixed;
+left:90%;
+top:5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.employeeDialog {
+top: 25%;
+position: fixed;
+z-index: 1;
+margin-bottom: 200px;
+background-color:  #d1e0e0;
+display: none;
+}
+
+.leaveTrackerContent {
+background-color:#c2d6d6;
+top:27%;
+left:70%;
+width:350px;
+height:180px;
+display:flex;
+flex-direction:row;
+}
+
+.teamLeaveTrackerContent {
+top:50%;
+background-color:#c2d6d6;
+display:none;
+}
+
+p{
+padding-right:2px;
+padding-left:5px;
+}
+
+.column {
+justify-content:Center;
+gap:20px;
+}
+
+#addLeaveBtn{
+position:fixed;
+left:76%;
+top:5%;
+}
+
+
+#leaveForm {
+    display: none;
+    position:fixed;
+    width:350px;
+    height:500px;
+    top:6%;
+    left:35%;
     z-index: 1;
-    position: fixed;
-    left: 0;
-    top: 0;
-    margin: 0 auto;
-    margin-left: 350px;
-    margin-top: 250px;
-    padding: 8px;
-    background-color: rgb(114, 118, 118);
-    display: none;
 }
 
-.dialog-dateAndTime {
-    padding-top: 6px;
-    padding-left: 80px;
+.teamApproveButton {
+margin-right:30px;
 }
 
-.dialog-actions {
-    padding-top: 10px;
-    padding-left: 130px;
-}
-
-.sub-task {
-    margin-left: 50px;
-    margin-top: 10px;
-    margin-bottom: 4px;
-}
-
-.sub-task-input,
-.sub-task-priority,
-.sub-task-date,
-.sub-task-time,
-.sub-task-edit,
-.sub-task-del {
-    margin-right: 10px;
-}
-
-#importFileInput {
-    display: none;
-}
-
-@media screen and (max-width: 650px) {
-    .container {
-        width: 80%;
-    }
-}
-
-@media screen and (max-width: 500px) {
-    .container {
-        width: 99%;
-        margin-top: 5px;
-    }
+.heading {
+padding-right:10px;
 }

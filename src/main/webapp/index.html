@@ -4,84 +4,119 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TO DO List</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Leave Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link href="css/style.css" rel="stylesheet">
 </head>
 
-<body>
-<div class="d-flex justify-content-end p-3">
-    <button id="logoutButton" class="btn btn-danger">Logout</button>
-</div>
-<div class="container">
-    <header id="main-header" class="bg-secondary text-white">
-        <h1 id="title">To-Do List</h1>
-    </header>
-    <div class="todo-container card">
-        <div class="mb-3 searchToDo">
-            <input type="text" id="todoSearch" placeholder="Search todo..">
-            <button type="button" class="btn btn-secondary ms-2" id="theme">Dark</button>
-            <select id="todoSort">
-                <option value="" disabled selected>Sort By</option>
-                <option value="Priority">Priority</option>
-                <option value="Time">Time</option>
-            </select>
-            <button id="export" class="btn btn-primary">Export</button>
-            <input type="file" id="importFileInput" />
-            <label for="importFileInput" id="import" class="btn btn-secondary">Import</label>
+<body class="bg-light">
+<div class="container mainContainer">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mainHeading">Leave Management</h2>
+        <div class="d-flex align-items-center" id="profileContainer">
+            <img src="images/profile_pic.jpg" alt="Profile" class="rounded-circle me-2" width="40" height="40" id="profilePic">
+            <span id="userName">John Doe</span>
+            <button id="logoutBtn" class="btn btn-danger mt-2">Logout</button>
         </div>
-        <div class="input m-2">
-            <input type="text" class="todoInput" id="inputField" placeholder="Enter item for to do">
-            <select id="todoPriority">
-                <option value="" disabled selected>Priority</option>
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
-            </select>
-            <input type="date" class="todoDate" id="todoDate">
-            <input type="time" class="todoTime" id="todoTime">
-            <button type="button" class="btn btn-secondary" id="addTodo">Add</button>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-4" id="tabs">
+        <li class="nav-item">
+            <a class="nav-link" id="leaveRequestsTab" href="#leaveRequests">My Leave Requests</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="teamLeaveRequestsTab" href="#teamLeaveRequests">Team Leave Requests</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="leaveRequests">
+            <div class="leave-container" id="leaveContainer">
+                <div class="row" id="leave-header">
+                    <div class="col-md-2"><strong>Applied Date</strong></div>
+                    <div class="col-md-2"><strong>Leave Type</strong></div>
+                    <div class="col-md-2"><strong>Date From</strong></div>
+                    <div class="col-md-2"><strong>Date To</strong></div>
+                    <div class="col-md-2"><strong>Reason</strong></div>
+                    <div class="col-md-2"><strong>Status</strong></div>
+                </div>
+                <!-- leave requests adding here -->
+            </div>
+
+            <div>
+                <button id="addLeaveBtn" class="btn btn-primary">Add Leave</button>
+            </div>
         </div>
-        <div id="todosContainer"></div>
-        <div id="dialog" class="dialog">
-            <div class="dialog-content" id="dialog-content">
-                <label for="dialogInput" class="dialogLabel">Enter new value:</label>
-                <input type="text" id="dialogInput" value="">
-                <select id="dialogPriority">
-                    <option value="" disabled selected>Priority</option>
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
+
+
+        <div class="tab-pane active" id="teamLeaveRequests">
+            <div class="team-leave-container" id="teamLeaveContainer">
+                <div class="team-leave-header" id="team-leave-header">
+                    <div class="team-employee"><strong>Applied Date</strong></div>
+                    <div class="team-employee"><strong>Applied By</strong></div>
+                    <div class="team-leaveType"><strong>Leave Type</strong></div>
+                    <div class="team-dateFrom"><strong>Date From</strong></div>
+                    <div class="team-dateTo"><strong>Date To</strong></div>
+                    <div class="team-reason"><strong>Reason</strong></div>
+                    <div class="team-status"><strong>Status</strong></div>
+                    <div class="team-action"><strong>Actions</strong></div>
+
+                </div>
+                <!-- team leave requests will be adding here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="leaveForm" class="card p-4 mt-4">
+        <h3 class="card-title">Add Leave Request</h3>
+        <form id="leaveRequestForm">
+            <div class="mb-3">
+                <label for="dateFrom" class="form-label">Date From:</label>
+                <input type="date" id="dateFrom" name="dateFrom" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="dateTo" class="form-label">Date To:</label>
+                <input type="date" id="dateTo" name="dateTo" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="leaveName" class="form-label">Leave Type:</label>
+                <select id="leaveName" name="leaveName" class="form-control" required>
+                    <option value="SICK_LEAVE">Sick Leave</option>
+                    <option value="CASUAL">Casual Leave</option>
+                    <option value="MATERNITY">Maternity Leave</option>
+                    <option value="PATERNITY">Paternity Leave</option>
+                    <option value="PAID_LEAVE">Paid Leave</option>
                 </select>
-                <div class="dialog-dateAndTime">
-                    <input type="date" id="dialogDate" value="">
-                    <input type="time" id="dialogTime" value="">
-                </div>
-                <div class="dialog-actions">
-                    <button id="dialog-save">Save</button>
-                    <button id="dialog-cancel">Cancel</button>
-                </div>
             </div>
-        </div>
-        <div id="subTaskDialog" class="subTaskDialog">
-            <label for="subTaskDialogInput" class="subTaskDialogLabel">Enter sub Task value:</label>
-            <input type="text" id="subTaskDialogInput" value="">
-            <select id="subTaskDialogPriority">
-                <option value="" disabled selected>Priority</option>
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
-            </select>
-            <input type="date" id="subTaskDialogDate" value="">
-            <input type="time" id="subTaskDialogTime" value="">
-            <div class="subTask-dialog-actions">
-                <button id="subTask-dialog-save">Save</button>
-                <button id="subTask-dialog-cancel">Cancel</button>
+            <div class="mb-3">
+                <label for="reason" class="form-label">Reason:</label>
+                <textarea id="reason" name="reason" class="form-control" rows="3" required></textarea>
             </div>
-        </div>
+            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="button"  id="cancelButton" class="btn btn-danger">Cancel</button>
+        </form>
+    </div>
+    <div>
+        <dialog id="employeeDialog" class="employeeDialog">
+            <h2>Employee Details</h2>
+            <p><strong>Name:</strong> <span id="employeeName"></span></p>
+            <p><strong>DOB:</strong> <span id="employeeDOB"></span></p>
+            <p><strong>Gender:</strong> <span id="employeeGender"></span></p>
+            <p><strong>Phone Number:</strong> <span id="employeePhone"></span></p>
+            <button id="closeDialog" class="btn-btn-danger">Close</button>
+        </dialog>
+    </div>
+    <div>
+        <dialog id="leaveTrackerContent" class="leaveTrackerContent">
+        </dialog>
+    </div>
+    <div>
+        <dialog id="teamLeaveTrackerContent" class="teamLeaveTrackerContent">
+        </dialog>
     </div>
 </div>
 <script src="js/script.js"></script>
 </body>
-
 </html>
